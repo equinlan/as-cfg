@@ -25,7 +25,7 @@ Rules = {
     ordinal: [nil, ["nanpa", :hundreds, :twenties, :fives, :twos, :ones]],
     pre_verb: [nil, Lexicon["pre_verbs"]].flatten,
     precondition: [nil, [:time, "la"], [:subject, :predicate, "la"], ["ken", "la"]],
-    predicate: [[:of, :adjectives], [:preposition, :noun, :adjectives], [:noun, :adjectives, :prepositional], [:pre_verb, :verb, :adjectives, :direct_object, :prepositional]],
+    predicate: [["pi", :noun, :adjectives], [:preposition, :noun, :adjectives], [:noun, :adjectives, :prepositional], [:pre_verb, :verb, :adjectives, :direct_object, :prepositional]],
     preposition: Lexicon["prepositions"],
     prepositional: [nil, [:preposition, :noun, :adjectives]],
     sentence: [[:but, :precondition, :subject, :predicate, :still, "."]],
@@ -47,7 +47,7 @@ Rules = {
 Start = :spell
 
 # Parameters
-num_spells = 100
+target_spell = "kon o pi mi a!"
 
 # Execution
 def produce from_variable
@@ -73,7 +73,9 @@ def produce from_variable
     to_str.flatten
 end
 
-for i in 1..num_spells
+n = 1
+
+begin
     # Join terminals
     terminals = produce(Start).join(" ");
 
@@ -81,5 +83,7 @@ for i in 1..num_spells
     terminals_formatted = terminals.gsub(/\s[.:!]/) { |terminal| terminal.strip }
 
     # Print output
-    print terminals_formatted + "\n"
-end
+    print "#{n} " + terminals_formatted + "\n"
+
+    n += 1
+end until terminals_formatted == target_spell
