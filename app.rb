@@ -47,7 +47,7 @@ Rules = {
 Start = :spell
 
 # Parameters
-target_spell = "kon o pi mi a!"
+num_spells = 100
 
 # Execution
 def produce from_variable
@@ -73,9 +73,7 @@ def produce from_variable
     to_str.flatten
 end
 
-n = 1
-
-begin
+for i in 1..num_spells
     # Join terminals
     terminals = produce(Start).join(" ");
 
@@ -83,7 +81,5 @@ begin
     terminals_formatted = terminals.gsub(/\s[.:!]/) { |terminal| terminal.strip }
 
     # Print output
-    print "#{n} " + terminals_formatted + "\n"
-
-    n += 1
-end until terminals_formatted == target_spell
+    print "#{i} " + terminals_formatted + "\n"
+end
