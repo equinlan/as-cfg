@@ -1,6 +1,6 @@
 # These rules attempt to imbue cardinality into the variable names
 
-Rules = {
+Rulesets = {
     'adjective*': [nil, :'adjective+'],
     'adjective+': [:'adjective', [:'adjective', :'adjective'], [:'adjective', :'adjective', :'adjective']],
     'adjective': Lexicon['adjectives'],

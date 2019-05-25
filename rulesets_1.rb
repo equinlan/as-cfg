@@ -1,4 +1,4 @@
-Rules = {
+Rulesets = {
     adjective: Lexicon["adjectives"],
     adjectives: [nil, [:adjective, :of, :adjectives, :ordinal]],
     but: [nil, "taso"],

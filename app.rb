@@ -9,12 +9,51 @@ Lexicon = {
     "prepositions" => ["tawa", "sama", "tan", "kepeken", "lon"]
 }
 
-# Import context-free grammar rules
-# load 'rules_1.rb'
-load 'rules_2.rb'
+# Import context-free grammar rulesets
+# load 'rulesets_1.rb'
+load 'rulesets_2.rb'
+
+# Expand rulesets
+def permutate siblings
+    permutations = []
+
+    if siblings.count == 1 # Return all my permutations if last sibling
+        me = siblings.last
+        
+        if me == nil || me.is_a?(String)
+            permutations = siblings
+        elsif me.is_a?(Symbol)
+            permutations = Rulesets[me]
+        end
+    else # Add my permutations to returned permutations if not last sibling
+        me = siblings.first
+
+        if me == nil || me.is_a?(String) # Pop me into all returned permutations
+            permutations = permutate(siblings.drop(1)).map { |permutation| [permutation].flatten.unshift(me) }
+        elsif me.is_a?(Symbol) # Multiply my permutations with siblings
+            permutate(siblings.drop(1)).each do |theirs|
+                Rulesets[me].each do |mine|
+                    permutations.push([theirs].flatten.unshift(mine))
+                end
+            end
+        end
+    end
+end
+
+def expand rule
+    rule_array = [rule].flatten
+
+    permutate rule_array
+end
+
+@expanded_rulesets = {}
+
+Rulesets.each_pair do |key, value|
+    @expanded_rulesets[key] = expand value
+end
 
 # Define context-free grammar start
-Start = :spell
+Start = :'spell'
 
 # Production function
 def produce from_variable
@@ -24,11 +63,11 @@ def produce from_variable
     # Process symbol
     if from_variable.is_a?(Symbol)
         # Choose random rule
-        if !Rules.key?(from_variable)
+        if !Rulesets.key?(from_variable)
             raise "Rule #{from_variable.to_s} not found!"
         end
-        rule = [Rules[from_variable].sample].flatten
-        
+        rule = [Rulesets[from_variable].sample].flatten
+
         # Produce from rule
         variables = rule.map { |variable| produce(variable) }
 
@@ -44,7 +83,7 @@ def produce from_variable
 end
 
 # Parameters
-num_spells = 100
+num_spells = 1
 
 # Execution logic
 for i in 1..num_spells
@@ -57,3 +96,5 @@ for i in 1..num_spells
     # Print output
     print "#{i} " + terminals_formatted + "\n"
 end
+
+print @expanded_rulesets
