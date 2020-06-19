@@ -1,4 +1,5 @@
 # These rules attempt to imbue cardinality into the variable names
+require './app'
 
 Rules = {
     'adjective*': [nil, :'adjective+'],
